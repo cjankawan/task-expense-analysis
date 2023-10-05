@@ -18,8 +18,8 @@ class report:
             try:
                 amount = float(i['amount'])
                 total += amount
-            except:
-                pass # Excape if empty
+            except ValueError:
+                pass
         total = round(total,2)
         print("")
         print(f"Total Expense: ${total}")
@@ -35,7 +35,7 @@ class report:
                     amount_by[data_type].append(amount)
                 else:
                     amount_by[data_type] = [amount]
-           except:
+           except ValueError:
                 pass
 
         total_expenses_by = {}
@@ -62,17 +62,19 @@ class report:
                 print(f"{key}: ${value}")
             print("")
     
+    
     def highest_expenses(self):
         day_expenses = {}
         for i in data:
             day = i['expense_date']
-            if day == '':
-                pass
-            else:
+            if day != '':
                 try:
                     expense = float(i['amount'])
-                    day_expenses[day] = expense
-                except:
+                    if day in day_expenses:
+                        day_expenses[day] += expense
+                    else:
+                        day_expenses[day] = expense
+                except ValueError:
                     pass
         max_key = max(day_expenses, key=lambda k: day_expenses[k])
         print(f"Day with Highest Expenses: {max_key} with ${day_expenses[max_key]}")
@@ -98,6 +100,7 @@ class report:
             x = round(x, 2)
             print(f"{key}: ${x}")
         print("")
+
 
     def breakdown_method(delf):
         expenses_type = set()
@@ -150,7 +153,7 @@ class report:
             print(f"{key:<15}{credit_card:>15,.2f}{cash:>15,.2f}{total:>15,.2f}")
         print("-" * 60)
         print(f"{'Total':<15}{total_credit_card:>15,.2f}{total_cash:>15,.2f}{final_total:>15,.2f}")
-
+        print("")
 
 
 file_path = 'expenses.csv'
